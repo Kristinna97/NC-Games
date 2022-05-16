@@ -12,6 +12,9 @@ exports.fetchReviewById = (id) => {
 };
 
 exports.updateVotes = (id, inc_votes) => {
+    if(!inc_votes){
+        return Promise.reject({ status: 400, msg: "Bad Request" });
+    }
   return db
     .query(
       "UPDATE reviews SET votes = votes + $1 WHERE review_id = $2 RETURNING * ",

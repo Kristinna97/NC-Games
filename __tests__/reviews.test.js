@@ -139,4 +139,13 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
+  test.only("status 400: responds with message 'Bad Request' when not passed an object with a value for inc_votes", () => {
+    return request(app)
+      .patch("/api/reviews/2")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
 });
