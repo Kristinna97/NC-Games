@@ -3,6 +3,7 @@ const { getCategories } = require("./controllers/categories-controller");
 const {
   getReviewById,
   updateReviewVotes,
+  getReviews
 } = require("./controllers/reviews-controller.js");
 
 const { getUsers } = require("./controllers/users-controller");
@@ -16,6 +17,7 @@ app.get("/api/reviews/:review_id", getReviewById);
 app.patch("/api/reviews/:review_id", updateReviewVotes);
 
 app.get("/api/users", getUsers);
+app.get('/api/reviews', getReviews)
 
 app.use("/*", (req, res, next) => {
   res.status(404).send({ msg: "Not Found" });
