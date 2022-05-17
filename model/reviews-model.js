@@ -5,7 +5,7 @@ exports.fetchReviewById = (id) => {
     .query(
       `SELECT reviews.*,
        CAST(COUNT(comments.comment_id) AS INTEGER) AS comment_count 
-       FROM reviews JOIN comments 
+       FROM reviews LEFT OUTER JOIN comments 
        ON reviews.review_id = comments.review_id
        WHERE reviews.review_id = $1 
        GROUP BY reviews.review_id`,
