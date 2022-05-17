@@ -21,16 +21,66 @@ describe("GET /api/reviews/:review_id", () => {
         const { review } = body;
         expect(review).toEqual(
           expect.objectContaining({
-            review_id: expect.any(Number),
-            title: expect.any(String),
-            review_body: expect.any(String),
-            designer: expect.any(String),
-            review_img_url: expect.any(String),
-            votes: expect.any(Number),
-            category: expect.any(String),
-            owner: expect.any(String),
-            created_at: expect.any(String),
+            review_id: 2,
+            title: "Jenga",
+            review_body: "Fiddly fun for all the family",
+            designer: "Leslie Scott",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            votes: 5,
+            category: "dexterity",
+            owner: "philippaclaire9",
+            created_at: "2021-01-18T10:01:41.251Z"
           })
+          
+        );
+      });
+  });
+  test("status 200 , responds with the corresponding review based on the id provided with the review now including comment_count ", () => {
+    return request(app)
+      .get("/api/reviews/2")
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: 2,
+            title: "Jenga",
+            review_body: "Fiddly fun for all the family",
+            designer: "Leslie Scott",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            votes: 5,
+            category: "dexterity",
+            owner: "philippaclaire9",
+            created_at: "2021-01-18T10:01:41.251Z",
+            comment_count:3
+          })
+          
+        );
+      });
+  });
+  test("status 200 , responds with review with correct id and with no comments (comment_count  = 0)", () => {
+    return request(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: 1,
+            title: 'Agricola',
+            review_body:'Farmyard fun!',
+            designer: 'Uwe Rosenberg',
+            review_img_url:
+            'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+            votes: 1,
+            category: 'euro game',
+            owner: 'mallionaire',
+            created_at: "2021-01-18T10:00:20.514Z",
+            comment_count:0
+          })
+          
         );
       });
   });
@@ -139,7 +189,7 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
-  test.only("status 400: responds with message 'Bad Request' when not passed an object with a value for inc_votes", () => {
+  test("status 400: responds with message 'Bad Request' when not passed an object with a value for inc_votes", () => {
     return request(app)
       .patch("/api/reviews/2")
       .send({})
