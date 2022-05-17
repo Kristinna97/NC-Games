@@ -5,12 +5,17 @@ const {
   updateReviewVotes,
 } = require("./controllers/reviews-controller.js");
 
+const { getUsers } = require("./controllers/users-controller");
+
 const app = express();
 app.use(express.json());
 
 app.get("/api/categories", getCategories);
+
 app.get("/api/reviews/:review_id", getReviewById);
 app.patch("/api/reviews/:review_id", updateReviewVotes);
+
+app.get("/api/users", getUsers);
 
 app.use("/*", (req, res, next) => {
   res.status(404).send({ msg: "Not Found" });
