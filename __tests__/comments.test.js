@@ -143,3 +143,25 @@ describe("POST /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("status:204, responds with an empty response body", () => {
+    return request(app).delete("/api/comments/2").expect(204);
+  });
+  test("status 404: responds with message' Not Found' when passed a non existing comment id", () => {
+    return request(app)
+      .delete("/api/comments/999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("status 400: responds with message' Bad Request' when passed a wrong format id", () => {
+    return request(app)
+      .delete("/api/comments/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});

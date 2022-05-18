@@ -1,6 +1,7 @@
 const {
   fetchCommentsByReviewId,
   addCommentOnReview,
+  removeComment,
 } = require("../model/comments-model");
 const { checkExists } = require("../db/seeds/utils");
 
@@ -24,7 +25,24 @@ exports.postCommentOnReview = (req, res, next) => {
   const content = req.body;
   addCommentOnReview(review_id, content)
     .then((addedComment) => {
-      res.status(201).send({ comment : addedComment });
+      res.status(201).send({ comment: addedComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteCommentById = (req, res, next) => {
+  const { comment_id } = req.params;
+
+  const promises = [
+    removeComment(comment_id),
+    checkExists("comments", "comment_id", comment_id),
+  ];
+
+  return Promise.all(promises)
+    .then(() => {
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);

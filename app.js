@@ -8,7 +8,8 @@ const {
 
 const { getUsers } = require("./controllers/users-controller");
 const {getCommentsByReviewId,
-       postCommentOnReview} = require('./controllers/comments-controller.js')
+       postCommentOnReview,
+       deleteCommentById} = require('./controllers/comments-controller.js')
  
 const { handlePSQLErrors,
         handleCustomError}  = require('./controllers/errors-controller')      
@@ -28,6 +29,7 @@ app.get('/api/reviews', getReviews)
 app.get('/api/reviews/:review_id/comments', getCommentsByReviewId)
 app.post('/api/reviews/:review_id/comments', postCommentOnReview)
 
+app.delete('/api/comments/:comment_id', deleteCommentById)
 
 app.use("/*", (req, res, next) => {
   res.status(404).send({ msg: "Not Found" });
