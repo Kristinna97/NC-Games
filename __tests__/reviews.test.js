@@ -31,9 +31,8 @@ describe("GET /api/reviews/:review_id", () => {
             votes: 5,
             category: "dexterity",
             owner: "philippaclaire9",
-            created_at: "2021-01-18T10:01:41.251Z"
+            created_at: "2021-01-18T10:01:41.251Z",
           })
-          
         );
       });
   });
@@ -55,9 +54,8 @@ describe("GET /api/reviews/:review_id", () => {
             category: "dexterity",
             owner: "philippaclaire9",
             created_at: "2021-01-18T10:01:41.251Z",
-            comment_count:3
+            comment_count: 3,
           })
-          
         );
       });
   });
@@ -70,18 +68,17 @@ describe("GET /api/reviews/:review_id", () => {
         expect(review).toEqual(
           expect.objectContaining({
             review_id: 1,
-            title: 'Agricola',
-            review_body:'Farmyard fun!',
-            designer: 'Uwe Rosenberg',
+            title: "Agricola",
+            review_body: "Farmyard fun!",
+            designer: "Uwe Rosenberg",
             review_img_url:
-            'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
             votes: 1,
-            category: 'euro game',
-            owner: 'mallionaire',
+            category: "euro game",
+            owner: "mallionaire",
             created_at: "2021-01-18T10:00:20.514Z",
-            comment_count:0
+            comment_count: 0,
           })
-          
         );
       });
   });
@@ -211,7 +208,7 @@ describe("GET /api/reviews", () => {
         expect(reviews).toBeInstanceOf(Array);
         expect(reviews).toHaveLength(13);
         expect(reviews).toBeSorted({ descending: true });
-        expect(reviews).toBeSortedBy("created_at", {coerce: true,});
+        expect(reviews).toBeSortedBy("created_at", { coerce: true });
         reviews.forEach((review) => {
           expect(review).toEqual(
             expect.objectContaining({
@@ -222,11 +219,111 @@ describe("GET /api/reviews", () => {
               review_img_url: expect.any(String),
               created_at: expect.any(String),
               votes: expect.any(Number),
-              comment_count: expect.any(Number)
+              comment_count: expect.any(Number),
             })
           );
         });
       });
   });
-});
 
+  test("status 200: reviews are sorted alphabetically descending  by title ", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=title")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSorted({ descending: true });
+        expect(reviews).toBeSortedBy("title", {
+          coerce: true,
+        });
+      });
+  });
+  test("status 200: reviews are sorted by comment count", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=comment_count")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("comment_count", {
+          descending: true,
+        });
+      });
+  });
+  test("status 200: reviews are sorted ASC by default sort_by", () => {
+    return request(app)
+      .get("/api/reviews?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSorted({ ascending: true });
+        expect(reviews).toBeSortedBy("created_at", {
+          coerce: true,
+        });
+      });
+  });
+  test("status 200: reviews are sorted ASC by votes", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("votes");
+        expect(reviews).toBeSorted({ ascending: true });
+      });
+  });
+  test("status 200: reviews are filtered by category", () => {
+    return request(app)
+      .get("/api/reviews?category=euro%20game")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(1);
+        expect(reviews[0].category).toBe('euro game')
+      });
+  });
+  test("status 200: reviews are filtered by category, and ordered in asc order by votes", () => {
+    return request(app)
+      .get("/api/reviews?category=social%20deduction&order=asc&sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toHaveLength(11);
+        expect(reviews).toBeSortedBy("votes");
+        expect(reviews).toBeSorted({ ascending: true });
+        reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              category:'social deduction'
+            })
+          )
+        })
+      });
+  });
+
+  test("status 400: responds with 'Bad Request' when invalid sort_by is passed", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=number")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("status 400: responds with 'Bad Request' when invalid order_by is passed", () => {
+    return request(app)
+      .get("/api/reviews?order=number")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("status 404: responds with 'Not Found' when entered a non-existing category", () => {
+    return request(app)
+      .get("/api/reviews?category=number")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
