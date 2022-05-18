@@ -282,6 +282,17 @@ describe("GET /api/reviews", () => {
         expect(reviews[0].category).toBe('euro game')
       });
   });
+  
+  test("status 200: returns an empty array when filtered by category that has no reviews yet", () => {
+    return request(app)
+      .get("/api/reviews?category=children%27s%20games")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeInstanceOf(Array);
+        expect(reviews).toEqual([])
+      });
+  });
   test("status 200: reviews are filtered by category, and ordered in asc order by votes", () => {
     return request(app)
       .get("/api/reviews?category=social%20deduction&order=asc&sort_by=votes")

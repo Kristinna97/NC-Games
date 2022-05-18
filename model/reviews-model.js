@@ -1,4 +1,6 @@
+const { response } = require("../app");
 const db = require("../db/connection");
+const { checkExists } = require("../db/seeds/utils");
 
 exports.fetchReviewById = (id) => {
   return db
@@ -47,7 +49,12 @@ exports.fetchReviews = (sort_by = "created_at", order = "desc", category) => {
     "comment_count",
   ];
 
-  const validCategories = ["euro game", "dexterity", "social deduction"];
+  const validCategories = [
+    "euro game",
+    "dexterity",
+    "social deduction",
+    "children's games",
+  ];
 
   let queryStr = `SELECT owner,
   title,
@@ -62,6 +69,9 @@ exports.fetchReviews = (sort_by = "created_at", order = "desc", category) => {
 
   if (category) {
     if (validCategories.includes(category)) {
+      if (category.includes("'")) {
+        category = category.replace("'", "''");
+      }
       queryStr += ` WHERE category='${category}' GROUP BY reviews.review_id`;
     } else {
       return Promise.reject({ status: 404, msg: "Not Found" });
@@ -81,7 +91,7 @@ exports.fetchReviews = (sort_by = "created_at", order = "desc", category) => {
   } else {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
-
+  
   return db.query(queryStr).then((response) => {
     return response.rows;
   });
