@@ -24,7 +24,7 @@ exports.postCommentOnReview = (req, res, next) => {
   const content = req.body;
   addCommentOnReview(review_id, content)
     .then((addedComment) => {
-      res.status(201).send({ addedComment });
+      res.status(201).send({ comment : addedComment });
     })
     .catch((err) => {
       next(err);

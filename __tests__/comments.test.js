@@ -73,8 +73,8 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .send(newComment)
       .expect(201)
       .then(({ body }) => {
-        const { addedComment } = body;
-        expect(addedComment).toEqual(
+        const { comment } = body;
+        expect(comment).toEqual(
           expect.objectContaining({
             comment_id: 7,
             body: "New Comment for review 2",
