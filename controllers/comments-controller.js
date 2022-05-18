@@ -1,4 +1,7 @@
-const { fetchCommentsByReviewId } = require("../model/comments-model");
+const {
+  fetchCommentsByReviewId,
+  addCommentOnReview,
+} = require("../model/comments-model");
 const { checkExists } = require("../db/seeds/utils");
 
 exports.getCommentsByReviewId = (req, res, next) => {
@@ -14,5 +17,16 @@ exports.getCommentsByReviewId = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
 
+exports.postCommentOnReview = (req, res, next) => {
+  const { review_id } = req.params;
+  const content = req.body;
+  addCommentOnReview(review_id, content)
+    .then((addedComment) => {
+      res.status(201).send({ comment : addedComment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

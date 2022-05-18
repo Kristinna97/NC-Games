@@ -32,7 +32,8 @@ exports.checkExists = (table, column, value) => {
     table,
     column
   );
-  return db.query(queryStr, [value]).then((response) => {
+  return db.query(queryStr, [value])
+  .then((response) => {
     if (!response.rows.length) {
       return Promise.reject({ status: 404, msg: "Not Found" });
     }
