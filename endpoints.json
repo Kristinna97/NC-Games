@@ -30,5 +30,98 @@
         }
       ]
     }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "mallionaire",
+          "name": "haz",
+          "avatar_url": "'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'"
+        }
+      ]
+    }
+  },
+  "GET reviews/:review_id": {
+    "description": "serves a review object that matches the review_id(example of review_id =2)",
+    "queries": [],
+    "exampleResponse": {
+      "reviews": [
+        {
+          "review_id": 2,
+          "title": "Jenga",
+          "review_body": "Fiddly fun for all the family",
+          "designer": "Leslie Scott",
+          "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          "votes": 5,
+          "category": "dexterity",
+          "owner": "philippaclaire9",
+          "created_at": "2021-01-18T10:01:41.251Z",
+          "comment_count": 3
+        }
+      ]
+    }
+  },
+  "GET reviews/:review_id/comments": {
+    "description": "serves an array of comments for the review with id that matches the review_id(example of review_id =2)",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "body": "I loved this game too!",
+          "votes": 16,
+          "author": "bainesface",
+          "review_id": 2,
+          "created_at": "new Date(1511354613389)"
+        }
+      ]
+    }
+  },
+  "PATCH reviews/:review_id": {
+    "description": "serves a review object that has been modified",
+    "queries": [],
+    "requestBody": { "inc_votes": "newVote" },
+    "exampleResponse": {
+      "reviews": [
+        {
+          "review_id": 2,
+          "title": "Jenga",
+          "review_body": "Fiddly fun for all the family",
+          "designer": "Leslie Scott",
+          "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          "votes": 6,
+          "category": "dexterity",
+          "owner": "philippaclaire9",
+          "created_at": "2021-01-18T10:01:41.251Z",
+          "comment_count": 3
+        }
+      ]
+    }
+  },
+  "POST reviews/:review_id/comments": {
+    "description": "serves a newly added comment for the specific review",
+    "queries": [],
+    "requestBody": {
+      "username": "philippaclaire9",
+      "body": "New Comment for review 2"
+    },
+    "exampleResponse": {
+      "reviews": [
+        {
+          "comment_id": 7,
+          " body": "New Comment for review 2",
+          "votes": 0,
+          "author": "philippaclaire9",
+          "review_id": 2
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment with given id, responds with no content",
+    "queries": [],
+    "exampleResponse": {}
   }
 }
