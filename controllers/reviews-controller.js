@@ -2,8 +2,9 @@ const {
   fetchReviewById,
   updateVotes,
   fetchReviews,
+  addReview
 } = require("../model/reviews-model");
-const { checkExists } = require("../db/seeds/utils");
+
 
 exports.getReviewById = (req, res, next) => {
   const id = req.params.review_id;
@@ -37,3 +38,12 @@ exports.getReviews = (req, res, next) => {
     next(err)
   })
 };
+
+exports.postReview = (req,res,next) =>{
+  const content = req.body;
+  addReview(content).then((newReview) =>{
+    res.status(201).send({reviews: newReview})
+  }).catch((err) =>{
+    next(err)
+  })
+}
