@@ -2,6 +2,7 @@ const {
   fetchCommentsByReviewId,
   addCommentOnReview,
   removeComment,
+  addVotesOnComment,
 } = require("../model/comments-model");
 const { checkExists } = require("../db/seeds/utils");
 
@@ -47,4 +48,19 @@ exports.deleteCommentById = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.updateVotesOnComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  const { inc_votes } = req.body;
+  const promises = [
+    addVotesOnComment(comment_id, inc_votes),
+    checkExists("comments", "comment_id", comment_id),
+  ];
+  return Promise.all(promises)
+  .then((response) => {
+    res.status(200).send({ updatedComment : response[0] });
+  }).catch((err) => {
+    next(err)
+  })
 };

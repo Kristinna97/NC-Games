@@ -35,3 +35,16 @@ exports.addCommentOnReview = (id, content) => {
 exports.removeComment = (id) =>{
    return db.query('DELETE FROM comments WHERE comment_id = $1' , [id])
 }
+
+exports.addVotesOnComment = (id, votes) =>{
+  if(!votes){
+     return Promise.reject({status:400, msg:'Bad Request'})
+}
+  return db
+    .query(
+      "UPDATE comments SET votes = votes + $1 WHERE comment_id = $2 RETURNING * ",
+      [votes, id]
+    ).then((response) =>{
+      return response.rows[0];
+    })
+}
