@@ -1,7 +1,4 @@
-const { response } = require("../app");
 const db = require("../db/connection");
-const { checkExists } = require("../db/seeds/utils");
-
 exports.fetchReviewById = (id) => {
   return db
     .query(
@@ -91,8 +88,29 @@ exports.fetchReviews = (sort_by = "created_at", order = "desc", category) => {
   } else {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
-  
+
   return db.query(queryStr).then((response) => {
     return response.rows;
   });
+};
+
+exports.addReview = (content) => {
+  const { title, designer, owner, review_body, category } = content;
+  const values = [title , designer, owner, review_body, category];
+
+  for(let property of values){
+    if(!property){
+      return Promise.reject({status:400, msg:"Bad Request"})
+    }
+  }
+
+  return db
+    .query(
+      `INSERT INTO reviews (title, designer, owner, review_body, category) 
+                      VALUES ($1, $2 , $3 , $4, $5) 
+                      RETURNING *;`,
+      [title, designer ,owner , review_body ,category]
+    ).then((response) =>{
+     return response.rows[0]
+    })
 };

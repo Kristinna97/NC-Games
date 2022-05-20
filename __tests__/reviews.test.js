@@ -197,7 +197,6 @@ describe("PATCH /api/reviews/:review_id", () => {
       });
   });
 });
-
 describe("GET /api/reviews", () => {
   test("status 200 , responds with  an array of reviews objects ", () => {
     return request(app)
@@ -332,6 +331,61 @@ describe("GET /api/reviews", () => {
   test("status 404: responds with 'Not Found' when entered a non-existing category", () => {
     return request(app)
       .get("/api/reviews?category=number")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+describe("POST /api/reviews", () => {
+  test("status 200: responds newly added review", () => {
+    const newReview = {
+    title: 'New Review Title',
+    designer: 'Kristina',
+    owner: 'philippaclaire9',
+    review_body: 'Fiddly fun for all the family',
+    category: 'dexterity',
+    };
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
+      .expect(201)
+      .then(({ body }) => {
+        const newReview = body.reviews;
+        expect(newReview).toEqual(
+          expect.objectContaining({
+            review_id: 14,
+            title: 'New Review Title',
+            designer: 'Kristina',
+            owner: 'philippaclaire9',
+            review_body: 'Fiddly fun for all the family',
+            category: 'dexterity',
+            review_img_url: 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg'
+          })
+        );
+      });
+  });
+  test("status 400: responds with message 'Bad Request' when mandatory keys are undefined", () => {
+    return request(app)
+      .post("/api/reviews")
+      .send({title: 'Hi'})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+
+  test("status 404: responds with message 'Not Found' when a user thats not in the database tries to post a review", () => {
+    const newReview = {
+      title: 'New Review Title',
+      designer: 'Kristina',
+      owner: 'kristina',
+      review_body: 'Fiddly fun for all the family',
+      category: 'dexterity',
+      };
+    return request(app)
+      .post("/api/reviews")
+      .send(newReview)
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
