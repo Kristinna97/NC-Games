@@ -34,5 +34,5 @@ where "test_file_name" is going to be the name of the test you want to run.<br /
  If you are not in the directory where the tests are, you will have to provide relative path to the test file
 
 ## Minimum version requrements 
-* Node.js: v15.6.0
-* Postgres: v8.7.3
+* Node.js: v18.2.0
+* Postgres: v12.9
