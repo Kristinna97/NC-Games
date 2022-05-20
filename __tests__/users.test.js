@@ -33,3 +33,30 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("GET /api/users/:username", () => {
+  test("status 200 , responds with  user object with the spcific username", () => {
+    return request(app)
+      .get("/api/users/dav3rid")
+      .expect(200)
+      .then(({ body }) => {
+        const { user} = body;    
+        expect(user).toEqual(
+            expect.objectContaining({
+              username: 'dav3rid',
+              name: 'dave',
+              avatar_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+            })
+          );
+        
+      });
+  });
+  test("status 404: responds with message' Not Found' when passed a username that doesnt exist", () => {
+    return request(app)
+      .get("/api/users/nonExistingUSername")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
