@@ -5,12 +5,13 @@ This project is the back-end project of the Northcoders Bootcamp. It was build u
 [You can see live verion of the app on the following link](https://northcoders-nc-games.herokuapp.com/api)
 
 ## Tech Stack
-
-<img src="./icons/js.png" alt="JavaScript" width="40"/>
-<img src="./icons/express.png" alt="Express" width="40"/>
+<br>
+<div display="flex" >
+<img src="./icons/js.png" alt="JavaScript" width="40" />
+<img src="./icons/express.png" alt="Express" width="40" />
 <img src="./icons/postgresql.png" alt="PostgresQl" width="40"/>
 <img src="./icons/jest.png" alt="Jest" width="40"/>
-
+<div>
 <br>
 
 ---
